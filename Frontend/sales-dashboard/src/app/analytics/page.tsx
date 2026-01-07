@@ -55,6 +55,7 @@ export default function AnalyticsPage() {
     open: false,
     message: "",
   });
+  const [pendingEditKey, setPendingEditKey] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const fetchNavigation = async () => {
@@ -158,15 +159,27 @@ export default function AnalyticsPage() {
     fetchData();
   }, [setLabels]);
 
+  const handleUsageDialogClose = (open: boolean) => {
+    setUsageDialog((prev) => ({ ...prev, open }));
+    if (!open && pendingEditKey) {
+      setTimeout(() => {
+        openEditModal(pendingEditKey);
+        setPendingEditKey(null);
+      }, 100);
+    }
+  };
+
   const handleEditLabel = (key: string) => {
     const usages = labelUsage[key] ?? ANALYTICS_LABEL_DEFAULT_USAGE[key] ?? [];
-    if (Array.isArray(usages) && usages.length > 1) {
+    if (Array.isArray(usages) && usages.length >= 1) {
       setUsageDialog({
         open: true,
         message: `This label is used in: ${usages.join(", ")}`,
       });
+      setPendingEditKey(key);
+    } else {
+      openEditModal(key);
     }
-    openEditModal(key);
   };
 
   const handleSaveLabel = (value: string) => {
@@ -298,10 +311,10 @@ export default function AnalyticsPage() {
         onClose={closeEditModal}
         onSave={handleSaveLabel}
       />
-      <Dialog open={usageDialog.open} onOpenChange={(open) => setUsageDialog((prev) => ({ ...prev, open }))}>
+      <Dialog open={usageDialog.open} onOpenChange={handleUsageDialogClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Shared label</DialogTitle>
+            <DialogTitle>Shared Label Warning</DialogTitle>
             <DialogDescription>{usageDialog.message}</DialogDescription>
           </DialogHeader>
         </DialogContent>
