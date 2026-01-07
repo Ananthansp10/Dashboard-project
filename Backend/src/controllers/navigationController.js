@@ -18,3 +18,12 @@ export const addNav = async (req,res) => {
         res.status(STATUS_CODE.INTERNAL_ERROR).json({success:false,message:ERROR_MESSAGE.INTERNAL_ERROR})
     }
 }
+
+export const getNav = async (req,res) => {
+    try {
+        const nav = await navigationModel.find()
+        res.status(STATUS_CODE.SUCCESS).json({success:true,nav})
+    } catch (error) {
+        res.status(STATUS_CODE.INTERNAL_ERROR).json({success:false,message:ERROR_MESSAGE.INTERNAL_ERROR})
+    }
+}

@@ -1,27 +1,28 @@
 import mongoose from "mongoose";
 
-const labelSchema = new mongoose.Schema(
+const tableDataSchema = new mongoose.Schema(
   {
-    key: {
+    tableName: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    usedIn: [
+    columns: [
       {
         type: String,
         required: true,
         trim: true,
       },
     ],
+    rows: [
+      {
+        type: Object,
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-export const labelModel = mongoose.model("labels", labelSchema);
+export const tableDataModel = mongoose.model("table_data", tableDataSchema);

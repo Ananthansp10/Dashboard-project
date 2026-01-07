@@ -1,7 +1,10 @@
-import express from 'express'
-import { addLabel } from '../controllers/labelController.js'
-const router = express.Router()
+import express from "express";
+import { addLabel, getLabels, updateLabel } from "../controllers/labelController.js";
 
-router.post('/label',addLabel)
+const router = express.Router();
 
-export default router
+router.get("/", getLabels);
+router.post("/add", addLabel);
+router.put("/update", updateLabel);
+
+export default router;
